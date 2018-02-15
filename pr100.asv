@@ -1,0 +1,12 @@
+%outputs every prime number below 100
+y=0;
+for x=10000:20000
+    if isprime(x)
+        y=y+1;
+        if y==1
+            disp(x)
+        end
+    end
+    
+end
+y
