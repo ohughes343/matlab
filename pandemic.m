@@ -8,11 +8,12 @@
 clear all;
 
 
-for p=4
-    
-    h(1) = .3;
-    for g=1:80
-        h(g+1) = p * h(g) * (1-h(g));
+%for p=4
+    p=3.6
+    h(1) = .1;
+    for g=1:50
+        h(g+1) = p * h(g) * (1-h(g)) - .001;
+        %p=3*rand + 1;
     end
     %figure();
     
@@ -23,5 +24,6 @@ for p=4
     hold on
     
 
-end
+%end
+
 
