@@ -8,20 +8,24 @@ time = 100000; %how long sim will run in seconds
 stepsize = 1;
 steps = time/stepsize; %number of steps that will run
 
-%initial x and y positions
+%initial positions
 xpos=[8e8]; 
 ypos=[8e8];
+zpos=[8e8];
 
-%initial x and y velocities
-xvel=[5000000]; 
-yvel=[-1000000];
+%initial velocities
+xvel=[4e6]; 
+yvel=[-4e6];
+zvel=[4e6]; 
 
 
-r = sqrt((xpos^2) + (ypos^2));
+
+r = sqrt((xpos^2) + (ypos^2)+ (zpos^2));
 
 %initial x and y accelerations
 xacc(1) = [(-gravity*earthmass*satmass)/(r^3) * (xpos/r)];
 yacc(1) = [(-gravity*earthmass*satmass)/(r^3) * (ypos/r)];
+zacc(1) = [(-gravity*earthmass*satmass)/(r^3) * (zpos/r)];
 
 
 figure;
@@ -37,12 +41,16 @@ for n=1:stepsize:time
     %calculate next position
     xpos(n+1) = xpos(n) + xvel(n)*stepsize;
     ypos(n+1) = ypos(n) + yvel(n)*stepsize;
+    zpos(n+1) = zpos(n) + zvel(n)*stepsize;
+
     
     %calculate next velocity
     xvel(n+1) = xvel(n) + xacc(n)*stepsize;
     yvel(n+1) = yvel(n) + yacc(n)*stepsize;
+    zvel(n+1) = zvel(n) + zacc(n)*stepsize;
+
     
-    r=sqrt((xpos(n+1))^2 + (ypos(n+1))^2);
+    r=sqrt((xpos(n+1))^2 + (ypos(n+1))^2 + (zpos(n+1))^2);
     
         if(r<earthrad)
             disp("Crash!")
@@ -54,10 +62,11 @@ for n=1:stepsize:time
         
     xacc(n+1) = [(-1)/(satmass) * (gravity*earthmass*satmass)/(r^2) * (xpos(n+1)/r)];
     yacc(n+1) = [(-1)/(satmass) * (gravity*earthmass*satmass)/(r^2) * (ypos(n+1)/r)];
-   
+    zacc(n+1) = [(-1)/(satmass) * (gravity*earthmass*satmass)/(r^2) * (zpos(n+1)/r)];
+
 
 end
 
-comet(xpos, ypos);
+comet3(xpos, ypos, zpos);
 
 plot(r)
