@@ -1,6 +1,6 @@
 clear all;
 gravity = 6.67e-11; %value of gravitational constant
-satmass = 100; %mass of satellite in kg
+satmass = 10000; %mass of satellite in kg
 earthmass = 5.972e32; %mass of earth in kg
 earthrad = 63.7e7;%radius of earth in m
 earthtomoon = 384e7; %distance from earth to moon in m
@@ -9,14 +9,19 @@ stepsize = 1;
 steps = time/stepsize; %number of steps that will run
 
 %initial positions
-xpos=[earthrad*(sqrt(2))/2]; 
-ypos=[earthrad*(sqrt(2))/2];
-zpos=[earthrad*(sqrt(2))/2];
+%xpos=[earthrad*(sqrt(2))/2]; 
+%ypos=[earthrad*(sqrt(2))/2];
+%zpos=[earthrad*(sqrt(2))/2];
+
+xpos=[2*earthrad]; 
+ypos=[2*earthrad];
+zpos=[2*earthrad];
+
 
 %initial velocities
-xvel=[4e6]; 
-yvel=[-5e6];
-zvel=[4e6]; 
+xvel=[3e6]; 
+yvel=[-3e6];
+zvel=[0]; 
 
 
 %define initial radius
@@ -36,9 +41,9 @@ rectangle('Position', [-earthrad -earthrad 2*earthrad 2*earthrad], 'Curvature', 
 daspect([1 1 1]);
 
 %generate sphere with radius r
-%[x,y,z] = sphere();
-%r = 2*earthrad;
-%surf( r*x, r*y, r*z )
+[x,y,z] = sphere();
+r = earthrad;
+surf( r*x, r*y, r*z )
 
 
 %loop each time step
