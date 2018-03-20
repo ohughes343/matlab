@@ -4,7 +4,12 @@ satmass = 10000; %mass of satellite in kg
 earthmass = 5.972e32; %mass of earth in kg
 earthrad = 63.7e7;%radius of earth in m
 earthtomoon = 384e7; %distance from earth to moon in m
-time = 100000; %how long sim will run in seconds
+
+marsrad = 63.7e7; %radius of mars in m
+marsmass = 6.39e32; %mass of mars in kg
+earthtomars = 5e10; %distance from earth to mars in m
+
+time = 1000000; %how long sim will run in seconds
 stepsize = 1;
 steps = time/stepsize; %number of steps that will run
 
@@ -13,14 +18,14 @@ steps = time/stepsize; %number of steps that will run
 %ypos=[earthrad*(sqrt(2))/2];
 %zpos=[earthrad*(sqrt(2))/2];
 
-xpos=[2*earthrad]; 
-ypos=[2*earthrad];
+xpos=[40*earthrad]; 
+ypos=[4*earthrad];
 zpos=[2*earthrad];
 
 
 %initial velocities
 xvel=[3e6]; 
-yvel=[-3e6];
+yvel=[-2e6];
 zvel=[0]; 
 
 
@@ -40,14 +45,25 @@ hold on;
 rectangle('Position', [-earthrad -earthrad 2*earthrad 2*earthrad], 'Curvature', [1 1]);
 daspect([1 1 1]);
 
-%generate sphere with radius r
+%draw circle for mars
+%rectangle('Position', [earthrad+earthtomars -marsrad 2*earthrad 2*earthrad], 'Curvature', [1 1]);
+%daspect([1 1 1]);
+
+%generate sphere for earth with radius r
 [x,y,z] = sphere();
 r = earthrad;
 surf( r*x, r*y, r*z )
 
+%generate sphere for mars with radius r
+[x,y,z] = sphere();
+m = marsrad;
+surf( m*x+earthtomars+marsrad, m*y, m*z )
+
+
+
 
 %loop each time step
-for n=1:stepsize:time
+for n=1:1:time
     
    
     %calculate next position
@@ -61,8 +77,11 @@ for n=1:stepsize:time
     yvel(n+1) = yvel(n) + yacc(n)*stepsize;
     zvel(n+1) = zvel(n) + zacc(n)*stepsize;
 
-    
+    %r represents satellite distance from earth
     r=sqrt((xpos(n+1))^2 + (ypos(n+1))^2 + (zpos(n+1))^2);
+    
+    %m represents satellite distance from mars
+    m=sqrt(((earthrad + earthtomars + marsrad) - xpos(n+1))^2 + (ypos(n+1))^2 + (zpos(n+1))^2);
     
         if(r<earthrad)
             disp("Crash!")
@@ -72,8 +91,8 @@ for n=1:stepsize:time
             disp("Satellite flew away...")
         end
         
-    xacc(n+1) = [(-1)/(satmass) * (gravity*earthmass*satmass)/(r^2) * (xpos(n+1)/r)];
-    yacc(n+1) = [(-1)/(satmass) * (gravity*earthmass*satmass)/(r^2) * (ypos(n+1)/r)];
+    xacc(n+1) = [(-1)/(satmass) * (gravity*earthmass*satmass)/(r^2) * (xpos(n+1)/r)] + [(-1)/(satmass) * (gravity*marsmass*satmass)/(m^2) * ((xpos(n+1)-(earthrad + earthtomars + marsrad))/m)];
+    yacc(n+1) = [(-1)/(satmass) * (gravity*earthmass*satmass)/(r^2) * (ypos(n+1)/r)] + [(-1)/(satmass) * (gravity*marsmass*satmass)/(m^2) * (ypos(n+1)/m)];
     zacc(n+1) = [(-1)/(satmass) * (gravity*earthmass*satmass)/(r^2) * (zpos(n+1)/r)];
     
     if n==10
